@@ -47,17 +47,41 @@
 <body>
     <div class="container">
         <h2>Get Your Key</h2>
-        <button onclick="getKey()">Get Key</button>
+        <button onclick="generateKey()">Get Key</button>
         <div id="message" class="message"></div>
     </div>
     <script>
-        function getKey() {
-            const key = "your-unique-key-here"; // Replace with your actual key
+        function generateKey() {
+            const key = generateCustomKey();
             navigator.clipboard.writeText(key).then(() => {
-                document.getElementById('message').textContent = 'Key copied to clipboard!';
+                document.getElementById('message').textContent = 'Key copied to clipboard: ' + key;
             }, () => {
                 document.getElementById('message').textContent = 'Failed to copy key.';
             });
+        }
+
+        function generateCustomKey() {
+            // Define the character sets for different parts of the key
+            const prefix = 'n([';
+            const specialChars = '+%}#{';
+            const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            const length = 16; // Length of the random part of the key
+
+            // Generate the random part of the key
+            let key = '';
+            for (let i = 0; i < length; i++) {
+                const randomIndex = Math.floor(Math.random() * charset.length);
+                key += charset[randomIndex];
+            }
+
+            // Add special characters and the prefix to the key
+            const specialIndex = Math.floor(Math.random() * specialChars.length);
+            const specialChar = specialChars[specialIndex];
+            const randomPosition = Math.floor(Math.random() * key.length);
+
+            key = key.slice(0, randomPosition) + specialChar + key.slice(randomPosition);
+
+            return prefix + key + specialChar;
         }
     </script>
 </body>
